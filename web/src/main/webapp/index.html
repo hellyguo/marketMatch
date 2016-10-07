@@ -1,0 +1,35 @@
+<!doctype>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Market Match</title>
+</head>
+<body>
+<div id="marketMatch">
+    <div>
+        <span>{{pName}}</span>
+        <button id="post" v-on:click="requestGenRandomOrder">post random order</button>
+    </div>
+    <div id="orderBook">
+        <ul id="sellList">
+            <li v-for="line in sellLines">
+                <span>{{line.name}}</span>:<span>{{line.limitPrice}}</span>&nbsp;|&nbsp;<span>{{line.volume}}</span>
+            </li>
+        </ul>
+        <ul id="buyList">
+            <li v-for="line in buyLines">
+                <span>{{line.name}}</span>:<span>{{line.limitPrice}}</span>&nbsp;|&nbsp;<span>{{line.volume}}</span>
+            </li>
+        </ul>
+    </div>
+    <div id="orderLog">
+        <ul>
+            <li v-for="log in orderLogs"></li>
+        </ul>
+    </div>
+</div>
+</body>
+<script src="js/lib/vue.js"></script>
+<script src="js/lib/jquery-3.1.1.js"></script>
+<script src="js/marketMatch.js"></script>
+</html>
