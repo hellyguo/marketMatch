@@ -36,7 +36,6 @@ public class MarketMatchServlet extends HttpServlet {
     private static final String UTF_8 = "UTF-8";
     private static final String ERR_CODE = "errCode";
     private static final String ERR_MSG = "errMsg";
-    private static final String PARAM_PID = "pid";
 
     private static final Random RANDOM = new Random();
     private static final int BASIC_LIMIT_PRICE = 23003;
@@ -58,7 +57,7 @@ public class MarketMatchServlet extends HttpServlet {
         LOGGER.info("uri:{}", uri);
         if (URI_POST_DATA.equals(uri)) {
             LOGGER.info("invoke postData");
-            String data = request.getParameter(PARAM_PID);
+            String data = request.getParameter(PID.jsonKeyName());
             LOGGER.info("posted data:{}", data);
             MarketMatchOrder order = createRandomOrder(data);
             ENGINE.receiveAndMatch(order);
@@ -90,7 +89,7 @@ public class MarketMatchServlet extends HttpServlet {
         LOGGER.info("uri:{}", uri);
         if (URI_VIEW_DATA.equals(uri)) {
             LOGGER.info("invoke viewData");
-            String data = request.getParameter(PARAM_PID);
+            String data = request.getParameter(PID.jsonKeyName());
             LOGGER.info("got data:{}", data);
             String retJson = VIEWER.view(data);
             writeJson(response, retJson);
