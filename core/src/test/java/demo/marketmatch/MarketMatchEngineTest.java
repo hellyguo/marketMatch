@@ -12,6 +12,7 @@ import java.util.Random;
 
 import static demo.marketmatch.constants.MarketMatchDirect.BUY;
 import static demo.marketmatch.constants.MarketMatchDirect.SELL;
+import static demo.marketmatch.constants.MarketMatchJsonKey.*;
 
 /**
  * Created by helly on 2016/9/30.
