@@ -31,6 +31,12 @@ public class MarketMatchServlet extends HttpServlet {
     private static final MarketMatchViewer VIEWER = new MarketMatchViewer();
     private static final MarketMatchEngine ENGINE = new MarketMatchEngine(VIEWER);
 
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json; charset=utf-8";
+    private static final String UTF_8 = "UTF-8";
+    private static final String ERR_CODE = "errCode";
+    private static final String ERR_MSG = "errMsg";
+    private static final String PARAM_PID = "pid";
 
     private static final Random RANDOM = new Random();
     private static final int BASIC_LIMIT_PRICE = 23003;
@@ -52,7 +58,7 @@ public class MarketMatchServlet extends HttpServlet {
         LOGGER.info("uri:{}", uri);
         if (URI_POST_DATA.equals(uri)) {
             LOGGER.info("invoke postData");
-            String data = request.getParameter("pid");
+            String data = request.getParameter(PARAM_PID);
             LOGGER.info("posted data:{}", data);
             MarketMatchOrder order = createRandomOrder(data);
             ENGINE.receiveAndMatch(order);
@@ -61,8 +67,8 @@ public class MarketMatchServlet extends HttpServlet {
         } else {
             LOGGER.warn("the uri[{}] is not allowed to execute post method", uri);
             JSONObject retJson = new JSONObject();
-            retJson.put("errCode", POST_NOT_ALLOWED.errCode());
-            retJson.put("errMsg", POST_NOT_ALLOWED.errMsg());
+            retJson.put(ERR_CODE, POST_NOT_ALLOWED.errCode());
+            retJson.put(ERR_MSG, POST_NOT_ALLOWED.errMsg());
             writeJson(response, retJson.toJSONString());
         }
     }
@@ -84,22 +90,22 @@ public class MarketMatchServlet extends HttpServlet {
         LOGGER.info("uri:{}", uri);
         if (URI_VIEW_DATA.equals(uri)) {
             LOGGER.info("invoke viewData");
-            String data = request.getParameter("pid");
+            String data = request.getParameter(PARAM_PID);
             LOGGER.info("got data:{}", data);
             String retJson = VIEWER.view(data);
             writeJson(response, retJson);
         } else {
             LOGGER.warn("the uri[{}] is not allowed to execute get method", uri);
             JSONObject retJson = new JSONObject();
-            retJson.put("errCode", GET_NOT_ALLOWED.errCode());
-            retJson.put("errMsg", GET_NOT_ALLOWED.errMsg());
+            retJson.put(ERR_CODE, GET_NOT_ALLOWED.errCode());
+            retJson.put(ERR_MSG, GET_NOT_ALLOWED.errMsg());
             writeJson(response, retJson.toJSONString());
         }
     }
 
     private void writeJson(HttpServletResponse response, String retJson) throws IOException {
-        response.addHeader("Content-Type", "application/json; charset=utf-8");
-        response.setCharacterEncoding("UTF-8");
+        response.addHeader(CONTENT_TYPE, APPLICATION_JSON_CHARSET_UTF_8);
+        response.setCharacterEncoding(UTF_8);
         response.getWriter().append(retJson);
         response.getWriter().flush();
     }
