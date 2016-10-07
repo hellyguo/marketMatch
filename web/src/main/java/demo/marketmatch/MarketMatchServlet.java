@@ -17,8 +17,9 @@ import java.util.Random;
 
 import static demo.marketmatch.constants.MarketMatchDirect.BUY;
 import static demo.marketmatch.constants.MarketMatchDirect.SELL;
-import static demo.marketmatch.constants.MarketMatchType.LIMIT;
 import static demo.marketmatch.constants.MarketMatchJsonKey.*;
+import static demo.marketmatch.constants.MarketMatchType.LIMIT;
+import static demo.marketmatch.constants.WebErrorCode.*;
 
 /**
  * Created by helly on 2016/10/6.
@@ -60,8 +61,8 @@ public class MarketMatchServlet extends HttpServlet {
         } else {
             LOGGER.warn("the uri[{}] is not allowed to execute post method", uri);
             JSONObject retJson = new JSONObject();
-            retJson.put("errCode", "-10001");
-            retJson.put("errMsg", "不允许执行POST");
+            retJson.put("errCode", POST_NOT_ALLOWED.errCode());
+            retJson.put("errMsg", POST_NOT_ALLOWED.errMsg());
             writeJson(response, retJson.toJSONString());
         }
     }
@@ -90,8 +91,8 @@ public class MarketMatchServlet extends HttpServlet {
         } else {
             LOGGER.warn("the uri[{}] is not allowed to execute get method", uri);
             JSONObject retJson = new JSONObject();
-            retJson.put("errCode", "-10002");
-            retJson.put("errMsg", "不允许执行GET");
+            retJson.put("errCode", GET_NOT_ALLOWED.errCode());
+            retJson.put("errMsg", GET_NOT_ALLOWED.errMsg());
             writeJson(response, retJson.toJSONString());
         }
     }
