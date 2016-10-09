@@ -19,7 +19,8 @@ import static demo.marketmatch.constants.MarketMatchDirect.BUY;
 import static demo.marketmatch.constants.MarketMatchDirect.SELL;
 import static demo.marketmatch.constants.MarketMatchJsonKey.*;
 import static demo.marketmatch.constants.MarketMatchType.LIMIT;
-import static demo.marketmatch.constants.WebErrorCode.*;
+import static demo.marketmatch.constants.WebErrorCode.GET_NOT_ALLOWED;
+import static demo.marketmatch.constants.WebErrorCode.POST_NOT_ALLOWED;
 
 /**
  * Created by helly on 2016/10/6.
@@ -78,7 +79,7 @@ public class MarketMatchServlet extends HttpServlet {
     private MarketMatchOrder createRandomOrder(String data) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(PID.jsonKeyName(), data);
-        jsonObject.put(CID.jsonKeyName(), USER_PREFIX+RANDOM.nextInt(USER_RANGE));
+        jsonObject.put(CID.jsonKeyName(), USER_PREFIX + RANDOM.nextInt(USER_RANGE));
         jsonObject.put(DIRECT.jsonKeyName(), RANDOM.nextBoolean() ? BUY.name() : SELL.name());
         jsonObject.put(ORDER_TYPE.jsonKeyName(), LIMIT.name());
         jsonObject.put(LIMIT_PRICE.jsonKeyName(), generator.randomPrice());

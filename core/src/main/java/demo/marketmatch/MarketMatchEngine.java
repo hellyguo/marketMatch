@@ -1,7 +1,5 @@
 package demo.marketmatch;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import demo.marketmatch.domain.MarketMatchOrder;
 import demo.marketmatch.store.MarketMatchStore;
 import demo.marketmatch.store.MarketMatchWaitingQueuePair;
@@ -13,13 +11,13 @@ public class MarketMatchEngine {
     private MarketMatchStore store = new MarketMatchStore();
     private MarketMatchViewer viewer;
 
-    public MarketMatchEngine(MarketMatchViewer viewer){
+    public MarketMatchEngine(MarketMatchViewer viewer) {
         this.viewer = viewer;
     }
 
     public void receiveAndMatch(MarketMatchOrder order) {
         String pid = order.getPid();
         MarketMatchWaitingQueuePair queuePair = store.getQueue(pid);
-        viewer.refreshView(pid,queuePair.match(order));
+        viewer.refreshView(pid, queuePair.match(order));
     }
 }
