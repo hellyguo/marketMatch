@@ -11,7 +11,7 @@
         <button id="post" v-on:click="requestGenRandomOrder">post random order</button>
     </div>
     <div v-if="order">
-        <span>上笔交易</span>
+        <span>上笔挂单</span>
         <table>
             <thead>
             <tr>
@@ -29,21 +29,11 @@
             </tr>
         </table>
     </div>
-    <div id="orderBook">
-        <ul id="sellList">
-            <li v-for="line in sellLines">
-                <span>{{line.name}}</span>:<span>{{line.limitPrice}}</span>&nbsp;|&nbsp;<span>{{line.volume}}</span>
-            </li>
-        </ul>
-        <ul id="buyList">
-            <li v-for="line in buyLines">
-                <span>{{line.name}}</span>:<span>{{line.limitPrice}}</span>&nbsp;|&nbsp;<span>{{line.volume}}</span>
-            </li>
-        </ul>
-    </div>
+    <div id="orderBookChart" style="width: 640px;height:400px;"></div>
 </div>
 </body>
-<script src="http://vuejs.org/js/vue.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="js/lib/vue.js"></script>
+<script src="js/lib/jquery-3.1.1.js"></script>
+<script src="js/lib/echarts.js"></script>
 <script src="js/marketMatch.js"></script>
 </html>
