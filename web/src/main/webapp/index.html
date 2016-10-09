@@ -10,6 +10,25 @@
         <span>{{pName}}</span>
         <button id="post" v-on:click="requestGenRandomOrder">post random order</button>
     </div>
+    <div v-if="order">
+        <span>上笔交易</span>
+        <table>
+            <thead>
+            <tr>
+                <td>客户名称</td>
+                <td>手数</td>
+                <td>价位</td>
+                <td>方向</td>
+            </tr>
+            </thead>
+            <tr>
+                <td>{{order.cid}}</td>
+                <td>{{order.volume}}</td>
+                <td>{{order.limitPrice}}</td>
+                <td>{{order.direct}}</td>
+            </tr>
+        </table>
+    </div>
     <div id="orderBook">
         <ul id="sellList">
             <li v-for="line in sellLines">
@@ -20,11 +39,6 @@
             <li v-for="line in buyLines">
                 <span>{{line.name}}</span>:<span>{{line.limitPrice}}</span>&nbsp;|&nbsp;<span>{{line.volume}}</span>
             </li>
-        </ul>
-    </div>
-    <div id="orderLog">
-        <ul>
-            <li v-for="log in orderLogs"></li>
         </ul>
     </div>
 </div>

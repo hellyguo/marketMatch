@@ -1,5 +1,7 @@
 package demo.marketmatch;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,14 +9,15 @@ import java.util.Map;
  * Created by helly on 2016/9/30.
  */
 public class MarketMatchViewer {
-    private Map<String, String> matchMap = new HashMap<>();
+    private static final JSONObject EMPTY = new JSONObject();
+    private Map<String, JSONObject> matchMap = new HashMap<>();
 
-    void refreshView(String pid, String json) {
+    public void refreshView(String pid, JSONObject json) {
         matchMap.put(pid, json);
     }
 
-    public String view(String pid) {
-        String retData = matchMap.get(pid);
-        return retData == null ? "{}" : retData;
+    public JSONObject view(String pid) {
+        JSONObject retData = matchMap.get(pid);
+        return retData == null ? EMPTY : retData;
     }
 }

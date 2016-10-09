@@ -38,6 +38,8 @@ public class MarketMatchServlet extends HttpServlet {
     private static final String ERR_MSG = "errMsg";
 
     private static final Random RANDOM = new Random();
+    private static final String USER_PREFIX = "demo";
+    private static final int USER_RANGE = 10;
     private static final int BASIC_LIMIT_PRICE = 23003;
     private static final int BASIC_VOLUME = 100;
     private static final int VOLUME_RANGE = 100;
@@ -61,8 +63,9 @@ public class MarketMatchServlet extends HttpServlet {
             LOGGER.info("posted data:{}", data);
             MarketMatchOrder order = createRandomOrder(data);
             ENGINE.receiveAndMatch(order);
-            String retJson = VIEWER.view(order.getPid());
-            writeJson(response, retJson);
+            JSONObject retJson = VIEWER.view(order.getPid());
+            retJson.put("order", order);
+            writeJson(response, retJson.toJSONString());
         } else {
             LOGGER.warn("the uri[{}] is not allowed to execute post method", uri);
             JSONObject retJson = new JSONObject();
@@ -75,7 +78,7 @@ public class MarketMatchServlet extends HttpServlet {
     private MarketMatchOrder createRandomOrder(String data) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(PID.jsonKeyName(), data);
-        jsonObject.put(CID.jsonKeyName(), Thread.currentThread().getName());
+        jsonObject.put(CID.jsonKeyName(), USER_PREFIX+RANDOM.nextInt(USER_RANGE));
         jsonObject.put(DIRECT.jsonKeyName(), RANDOM.nextBoolean() ? BUY.name() : SELL.name());
         jsonObject.put(ORDER_TYPE.jsonKeyName(), LIMIT.name());
         jsonObject.put(LIMIT_PRICE.jsonKeyName(), generator.randomPrice());
@@ -91,8 +94,8 @@ public class MarketMatchServlet extends HttpServlet {
             LOGGER.info("invoke viewData");
             String data = request.getParameter(PID.jsonKeyName());
             LOGGER.info("got data:{}", data);
-            String retJson = VIEWER.view(data);
-            writeJson(response, retJson);
+            JSONObject retJson = VIEWER.view(data);
+            writeJson(response, retJson.toJSONString());
         } else {
             LOGGER.warn("the uri[{}] is not allowed to execute get method", uri);
             JSONObject retJson = new JSONObject();

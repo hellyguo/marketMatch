@@ -9,13 +9,15 @@ var vm = new Vue({
     data: {
         pName: "Au(T+D)",
         buyLines: [],
-        sellLines: []
+        sellLines: [],
+        order: {}
     },
     ready: function () {
         pageData.intervalId = setInterval(function () {
             $.get('/viewData', {pid: pageData.pid}, function (data) {
                 vm.buyLines = data.buyLines;
                 vm.sellLines = data.sellLines;
+                vm.order = data.order;
             }, 'json');
         }, 1000);
     },
@@ -24,6 +26,7 @@ var vm = new Vue({
             $.post('/postData', {pid: pageData.pid}, function (data) {
                 vm.buyLines = data.buyLines;
                 vm.sellLines = data.sellLines;
+                vm.order = data.order;
             }, 'json');
         }
     }

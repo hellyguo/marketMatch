@@ -17,7 +17,7 @@ public class MarketMatchWaitingQueuePair {
     private MarketMatchWaitingQueue waitingBuyQueue = new MarketMatchWaitingQueue(BUY);
     private MarketMatchWaitingQueue waitingSellQueue = new MarketMatchWaitingQueue(SELL);
 
-    public String match(MarketMatchOrder order) {
+    public JSONObject match(MarketMatchOrder order) {
         LOGGER.debug("[{}]", order);
         MarketMatchDirect direct = order.getDirect();
         switch (direct) {
@@ -30,7 +30,7 @@ public class MarketMatchWaitingQueuePair {
             default:
                 LOGGER.warn("[{}] is unknown direct", direct);
         }
-        return print(waitingBuyQueue, waitingSellQueue).toJSONString();
+        return composeJson(waitingBuyQueue, waitingSellQueue);
     }
 
     private void matchOrWait(MarketMatchOrder order, MarketMatchWaitingQueue matchQueue, MarketMatchWaitingQueue waitingQueue) {
@@ -40,7 +40,7 @@ public class MarketMatchWaitingQueuePair {
         }
     }
 
-    private JSONObject print(MarketMatchWaitingQueue waitingBuyQueue, MarketMatchWaitingQueue waitingSellQueue) {
+    private JSONObject composeJson(MarketMatchWaitingQueue waitingBuyQueue, MarketMatchWaitingQueue waitingSellQueue) {
         JSONObject retJson = new JSONObject();
         retJson.put("buyLines", waitingBuyQueue.print());
         retJson.put("sellLines", waitingSellQueue.print());
