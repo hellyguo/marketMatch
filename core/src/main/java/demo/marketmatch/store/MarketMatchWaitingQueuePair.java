@@ -6,7 +6,8 @@ import demo.marketmatch.domain.MarketMatchOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static demo.marketmatch.constants.MarketMatchDirect.*;
+import static demo.marketmatch.constants.MarketMatchDirect.BUY;
+import static demo.marketmatch.constants.MarketMatchDirect.SELL;
 
 
 /**
