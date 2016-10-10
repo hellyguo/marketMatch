@@ -24,7 +24,7 @@ var pageData = {
             grid: {
                 top: 80,
                 bottom: 30,
-                left:100
+                left: 100
             },
             xAxis: {
                 type: 'value',
@@ -39,20 +39,18 @@ var pageData = {
                 splitLine: {show: false},
                 data: []
             },
-            series: [
-                {
-                    name: 'volume',
-                    type: 'bar',
-                    stack: 'total volume',
-                    label: {
-                        normal: {
-                            show: true,
-                            formatter: '{b}'
-                        }
-                    },
-                    data: []
-                }
-            ]
+            series: [{
+                name: 'volume',
+                type: 'bar',
+                stack: 'total volume',
+                label: {
+                    normal: {
+                        show: true,
+                        formatter: '{b}'
+                    }
+                },
+                data: []
+            }]
         };
 
         pageData.chart.setOption(option);
@@ -61,6 +59,7 @@ var pageData = {
         vm.buyLines = data.buyLines;
         vm.sellLines = data.sellLines;
         vm.order = data.order;
+        vm.hisOrder = data.hisOrder;
         var newData = {names: [], data: []};
         var labelLeft = {
             normal: {
@@ -117,7 +116,8 @@ var vm = new Vue({
         pName: "Au(T+D)",
         buyLines: [],
         sellLines: [],
-        order: {}
+        order: {},
+        hisOrder: []
     },
     ready: function () {
         pageData.intervalId = setInterval(function () {

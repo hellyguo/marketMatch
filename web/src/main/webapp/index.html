@@ -30,6 +30,13 @@
         </table>
     </div>
     <div id="orderBookChart" style="width: 640px;height:400px;"></div>
+    <div id="hisOrderList">
+        <ul>
+            <li v-for="o in hisOrder">
+                {{o.cid}} posted {{o.direct}} {{o.volume}}@{{o.limitPrice}}
+            </li>
+        </ul>
+    </div>
 </div>
 </body>
 <script src="js/lib/vue.js"></script>
