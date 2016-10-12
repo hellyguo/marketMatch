@@ -13,7 +13,7 @@ var pageData = {
 
         var option = {
             title: {
-                text: '挂单队列'
+                text: 'Au(T+D)挂单队列'
             },
             tooltip: {
                 trigger: 'axis',

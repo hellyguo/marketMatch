@@ -2,3 +2,16 @@
     width: 640px;
     height: 400px;
 }
+
+#hisOrderList {
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.buyOrder {
+    color: red;
+}
+
+.sellOrder {
+    color: green;
+}
