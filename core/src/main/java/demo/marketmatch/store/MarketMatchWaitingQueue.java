@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import demo.marketmatch.constants.MarketMatchDirect;
 import demo.marketmatch.domain.MarketMatchOrder;
+import demo.marketmatch.domain.MarketMatchTrade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ class MarketMatchWaitingQueue {
      * @param order order info
      * @return true, if full matched and has no order left; false if not full matched and has order left
      */
-    boolean matchAndStrike(MarketMatchOrder order) {
+    boolean matchAndStrike(MarketMatchOrder order, List<MarketMatchTrade> matchedTrade) {
         if (direct.isFit(topPrice, order.getLimitPrice())) {
             LinkedList<MarketMatchOrder> orderList;
             Iterator<MarketMatchOrder> iterator;
@@ -59,7 +60,7 @@ class MarketMatchWaitingQueue {
                 iterator = orderList.iterator();
                 while (iterator.hasNext()) {
                     waitingOrder = iterator.next();
-                    match(order, waitingOrder);
+                    matchedTrade.add(match(order, waitingOrder));
                     if (waitingOrder.isFullMatched()) {
                         iterator.remove();
                     }
@@ -85,55 +86,67 @@ class MarketMatchWaitingQueue {
         orderList.add(order);
     }
 
-    private void match(MarketMatchOrder order, MarketMatchOrder waitingOrder) {
+    private MarketMatchTrade match(MarketMatchOrder order, MarketMatchOrder waitingOrder) {
+        int matchVolume;
         int leftVolume = order.getLeftVolume();
         int waitingLeftVolume = waitingOrder.getLeftVolume();
         if (leftVolume > waitingLeftVolume) {
+            matchVolume = waitingLeftVolume;
             order.setLeftVolume(leftVolume - waitingLeftVolume);
             waitingOrder.setLeftVolume(0);
         } else if (leftVolume < waitingLeftVolume) {
+            matchVolume = leftVolume;
             waitingOrder.setLeftVolume(waitingLeftVolume - leftVolume);
             order.setLeftVolume(0);
         } else {
+            matchVolume = leftVolume;
             order.setLeftVolume(0);
             waitingOrder.setLeftVolume(0);
         }
-        push(order, waitingOrder, leftVolume, waitingLeftVolume);
+        return composeTrade(order, waitingOrder, matchVolume, leftVolume, waitingLeftVolume);
     }
 
-    private void push(MarketMatchOrder order, MarketMatchOrder waitingOrder, int leftVolume, int waitingLeftVolume) {
-        //TODO PUSH IT
-        LOGGER.info("{}:{}'s order[{}]@[{}][total {}/before {}/left {}] matches {}'s order[{}]@[{}][total {}/before {}/left {}]@{} done",
-                order.getPid(), order.getCid(), order.getDirect(), order.getLimitPrice(), order.getVolume(), leftVolume, order.getLeftVolume(),
+    private MarketMatchTrade composeTrade(MarketMatchOrder order, MarketMatchOrder waitingOrder, int matchVolume, int leftVolume, int waitingLeftVolume) {
+        LOGGER.info("{}:{}'s order[{}]@[{}][total {}/before {}/left {}] matches {} lot(s) {}'s order[{}]@[{}][total {}/before {}/left {}]@{} done",
+                order.getPid(), order.getCid(), order.getDirect(), order.getLimitPrice(), order.getVolume(), leftVolume, order.getLeftVolume(), matchVolume,
                 waitingOrder.getCid(), waitingOrder.getDirect(), waitingOrder.getLimitPrice(), waitingOrder.getVolume(), waitingLeftVolume, waitingOrder.getLeftVolume(),
                 waitingOrder.getLimitPrice());
+        MarketMatchTrade trade = new MarketMatchTrade();
+        trade.setPid(order.getPid());
+        trade.setCounterParty1(order.getCid());
+        trade.setCounterParty2(waitingOrder.getCid());
+        trade.setMatchPrice(waitingOrder.getLimitPrice());
+        trade.setMatchVolume(matchVolume);
+        trade.setDirect(order.getDirect());
+        trade.setTimestamp(System.currentTimeMillis());
+        return trade;
     }
 
-    public JSONArray print() {
+    public List<Map<String, Object>> print() {
         int idx = 0;
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject;
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map;
         List<MarketMatchOrder> orderList;
         int size = data.size();
         size = size > MAX_SIZE ? MAX_SIZE : size;
         for (int pointToTopPrice = topPrice;
-             Math.abs(topPrice - pointToTopPrice) < MAX_DISTANCE && jsonArray.size() < size;
+             Math.abs(topPrice - pointToTopPrice) < MAX_DISTANCE && list.size() < size;
              pointToTopPrice = direct.nextTopPrice(pointToTopPrice)) {
             orderList = data.get(pointToTopPrice);
             if (orderList == null || orderList.isEmpty()) {
                 continue;
             }
-            jsonObject = new JSONObject();
-            jsonObject.put("name", direct.printName(idx));
-            jsonObject.put("limitPrice", pointToTopPrice);
-            jsonObject.put("volume", sumVolume(orderList));
-            jsonArray.add(jsonObject);
+            map = new HashMap<>();
+            map.put("name", direct.printName(idx));
+            map.put("limitPrice", pointToTopPrice);
+            map.put("volume", sumVolume(orderList));
+            list.add(map);
             idx++;
         }
         if (SELL.equals(direct)) {
-            Collections.reverse(jsonArray);
+            Collections.reverse(list);
         }
-        return jsonArray;
+        return list;
     }
 
     private int sumVolume(List<MarketMatchOrder> orderList) {

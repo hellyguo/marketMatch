@@ -30,8 +30,8 @@ import static demo.marketmatch.constants.WebErrorCode.POST_NOT_ALLOWED;
 public class MarketMatchServlet extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(MarketMatchServlet.class);
 
-    private static final MarketMatchViewer VIEWER = new MarketMatchViewer();
-    private static final MarketMatchEngine ENGINE = new MarketMatchEngine(VIEWER);
+    private static final MarketMatchViewer VIEWER = MarketMatchViewer.getInstance();
+    private static final MarketMatchEngine ENGINE = MarketMatchEngine.getInstance();
 
     private static final LinkedHashMap<String, MarketMatchOrder> ORDER_MAP = new HisOrderMap<>(100);
 
@@ -42,7 +42,6 @@ public class MarketMatchServlet extends HttpServlet {
     private static final String ERR_MSG = "errMsg";
 
     private static final Random RANDOM = new Random();
-    private static final String ORDER_KEY = "order";
     private static final String HIS_ORDER_KEY = "hisOrder";
     private static final String USER_PREFIX = "demo";
     private static final int USER_RANGE = 10;
@@ -70,12 +69,11 @@ public class MarketMatchServlet extends HttpServlet {
             MarketMatchOrder order = createRandomOrder(data);
             ENGINE.receiveAndMatch(order);
             JSONObject retJson = VIEWER.view(order.getPid());
-            retJson.put(ORDER_KEY, order);
+            ORDER_MAP.put(UUID.randomUUID().toString(), order);
             List hisOrder = new ArrayList<>(ORDER_MAP.values());
             Collections.reverse(hisOrder);
             retJson.put(HIS_ORDER_KEY, hisOrder);
             writeJson(response, retJson.toJSONString());
-            ORDER_MAP.put(UUID.randomUUID().toString(), order);
         } else {
             LOGGER.warn("the uri[{}] is not allowed to execute post method", uri);
             JSONObject retJson = new JSONObject();

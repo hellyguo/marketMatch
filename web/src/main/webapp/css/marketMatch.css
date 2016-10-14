@@ -1,17 +1,22 @@
 #orderBookChart {
     width: 640px;
-    height: 400px;
+    height: 360px;
 }
 
 #hisOrderList {
-    max-height: 400px;
+    max-height: 360px;
     overflow-y: scroll;
 }
 
-.buyOrder {
+#matchList {
+    max-height: 140px;
+    overflow-y: scroll;
+}
+
+.buy {
     color: red;
 }
 
-.sellOrder {
+.sell {
     color: green;
 }
