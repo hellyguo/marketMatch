@@ -105,7 +105,7 @@ class MarketMatchWaitingQueue {
     }
 
     private MarketMatchTrade composeTrade(MarketMatchOrder order, MarketMatchOrder waitingOrder, int matchVolume, int leftVolume, int waitingLeftVolume) {
-        LOGGER.info("{}:{}'s order[{}]@[{}][total {}/before {}/left {}] matches {} lot(s) {}'s order[{}]@[{}][total {}/before {}/left {}]@{} done",
+        LOGGER.debug("{}:{}'s order[{}]@[{}][total {}/before {}/left {}] matches {} lot(s) {}'s order[{}]@[{}][total {}/before {}/left {}]@{} done",
                 order.getPid(), order.getCid(), order.getDirect(), order.getLimitPrice(), order.getVolume(), leftVolume, order.getLeftVolume(), matchVolume,
                 waitingOrder.getCid(), waitingOrder.getDirect(), waitingOrder.getLimitPrice(), waitingOrder.getVolume(), waitingLeftVolume, waitingOrder.getLeftVolume(),
                 waitingOrder.getLimitPrice());

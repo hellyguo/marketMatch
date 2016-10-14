@@ -59,9 +59,17 @@ public class MarketMatchEngine {
                 lock.unlock();
             }
             if (!fetchedOrder.isEmpty()) {
-                fetchedOrder.forEach(this::receiveAndMatch);
+                matchOrderList(fetchedOrder);
             }
         }
+    }
+
+    void matchOrderList(List<MarketMatchOrder> fetchedOrder) {
+        fetchedOrder.forEach(this::receiveAndMatch);
+    }
+
+    void matchOrder(MarketMatchOrder fetchedOrder) {
+        receiveAndMatch(fetchedOrder);
     }
 
     private void receiveAndMatch(MarketMatchOrder order) {

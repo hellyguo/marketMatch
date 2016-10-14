@@ -51,7 +51,7 @@ public class MarketMatchServlet extends HttpServlet {
         String uri = request.getRequestURI();
         LOGGER.info("uri:{}", uri);
         if (URI_POST_DATA.equals(uri)) {
-            LOGGER.info("invoke postData");
+            LOGGER.debug("invoke postData");
             String data = request.getParameter(PID.jsonKeyName());
             LOGGER.info("posted data:{}", data);
             MarketMatchOrder order = RandomOrderGenerator.createRandomOrder(data);
@@ -70,7 +70,7 @@ public class MarketMatchServlet extends HttpServlet {
         String uri = request.getRequestURI();
         LOGGER.info("uri:{}", uri);
         if (URI_VIEW_DATA.equals(uri)) {
-            LOGGER.info("invoke viewData");
+            LOGGER.debug("invoke viewData");
             String data = request.getParameter(PID.jsonKeyName());
             LOGGER.info("got data:{}", data);
             writeJson(response, VIEWER.view(data));
