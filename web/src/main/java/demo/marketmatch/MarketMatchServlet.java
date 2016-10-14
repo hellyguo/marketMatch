@@ -55,9 +55,8 @@ public class MarketMatchServlet extends HttpServlet {
             String data = request.getParameter(PID.jsonKeyName());
             LOGGER.info("posted data:{}", data);
             MarketMatchOrder order = RandomOrderGenerator.createRandomOrder(data);
-            ENGINE.receiveAndMatch(order);
-            JSONObject retJson = VIEWER.view(order.getPid());
-            writeJson(response, retJson.toJSONString());
+            ENGINE.postOrder(order);
+            writeJson(response, VIEWER.view(order.getPid()));
         } else {
             LOGGER.warn("the uri[{}] is not allowed to execute post method", uri);
             JSONObject retJson = new JSONObject();
@@ -74,8 +73,7 @@ public class MarketMatchServlet extends HttpServlet {
             LOGGER.info("invoke viewData");
             String data = request.getParameter(PID.jsonKeyName());
             LOGGER.info("got data:{}", data);
-            JSONObject retJson = VIEWER.view(data);
-            writeJson(response, retJson.toJSONString());
+            writeJson(response, VIEWER.view(data));
         } else {
             LOGGER.warn("the uri[{}] is not allowed to execute get method", uri);
             JSONObject retJson = new JSONObject();
