@@ -1,7 +1,5 @@
 package demo.marketmatch.store;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import demo.marketmatch.constants.MarketMatchDirect;
 import demo.marketmatch.domain.MarketMatchOrder;
 import demo.marketmatch.domain.MarketMatchTrade;
@@ -60,7 +58,7 @@ class MarketMatchWaitingQueue {
                 iterator = orderList.iterator();
                 while (iterator.hasNext()) {
                     waitingOrder = iterator.next();
-                    matchedTrade.add(match(order, waitingOrder));
+                    matchedTrade.add(0, match(order, waitingOrder));
                     if (waitingOrder.isFullMatched()) {
                         iterator.remove();
                     }

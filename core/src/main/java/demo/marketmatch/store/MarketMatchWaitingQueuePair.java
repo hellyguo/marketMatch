@@ -1,8 +1,9 @@
 package demo.marketmatch.store;
 
-import com.alibaba.fastjson.JSONObject;
+import demo.marketmatch.MarketMatchViewer;
 import demo.marketmatch.constants.MarketMatchDirect;
 import demo.marketmatch.domain.MarketMatchOrder;
+import demo.marketmatch.domain.MarketMatchOrderBook;
 import demo.marketmatch.domain.MarketMatchTrade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class MarketMatchWaitingQueuePair {
     private MarketMatchWaitingQueue waitingBuyQueue = new MarketMatchWaitingQueue(BUY);
     private MarketMatchWaitingQueue waitingSellQueue = new MarketMatchWaitingQueue(SELL);
 
-    public JSONObject match(MarketMatchOrder order) {
+    public void match(MarketMatchOrder order) {
         LOGGER.debug("[{}]", order);
         MarketMatchDirect direct = order.getDirect();
         List<MarketMatchTrade> matchedTrade;
@@ -37,7 +38,7 @@ public class MarketMatchWaitingQueuePair {
                 matchedTrade = new ArrayList<>();
                 LOGGER.warn("[{}] is unknown direct", direct);
         }
-        return composeJson(waitingBuyQueue, waitingSellQueue, matchedTrade);
+        pushToView(order, waitingBuyQueue, waitingSellQueue, matchedTrade);
     }
 
     private List<MarketMatchTrade> matchOrWait(MarketMatchOrder order, MarketMatchWaitingQueue matchQueue, MarketMatchWaitingQueue waitingQueue) {
@@ -49,11 +50,14 @@ public class MarketMatchWaitingQueuePair {
         return list;
     }
 
-    private JSONObject composeJson(MarketMatchWaitingQueue waitingBuyQueue, MarketMatchWaitingQueue waitingSellQueue, List<MarketMatchTrade> matchedTrade) {
-        JSONObject retJson = new JSONObject();
-        retJson.put("buyLines", waitingBuyQueue.print());
-        retJson.put("sellLines", waitingSellQueue.print());
-        retJson.put("matched", matchedTrade);
-        return retJson;
+    private void pushToView(MarketMatchOrder order, MarketMatchWaitingQueue waitingBuyQueue, MarketMatchWaitingQueue waitingSellQueue, List<MarketMatchTrade> matchedTrade) {
+        MarketMatchViewer viewer = MarketMatchViewer.getInstance();
+        String pid = order.getPid();
+        MarketMatchOrderBook book = new MarketMatchOrderBook();
+        book.setBuyQueue(waitingBuyQueue.print());
+        book.setSellQueue(waitingSellQueue.print());
+        viewer.pushBook(pid, book);
+        viewer.pushOrder(pid, order);
+        viewer.pushTrade(pid, matchedTrade);
     }
 }

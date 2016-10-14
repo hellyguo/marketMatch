@@ -22,6 +22,6 @@ public class MarketMatchEngine {
     public void receiveAndMatch(MarketMatchOrder order) {
         String pid = order.getPid();
         MarketMatchWaitingQueuePair queuePair = store.getQueue(pid);
-        MarketMatchViewer.getInstance().refreshView(pid, queuePair.match(order));
+        queuePair.match(order);
     }
 }
