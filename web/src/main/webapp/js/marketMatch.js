@@ -58,8 +58,8 @@ var pageData = {
     refreshData: function (data) {
         vm.buyLines = data.buyLines;
         vm.sellLines = data.sellLines;
-        vm.order = data.order;
         vm.hisOrder = data.hisOrder;
+        vm.matched = data.matched;
         var newData = {names: [], data: []};
         var labelLeft = {
             normal: {
@@ -116,8 +116,8 @@ var vm = new Vue({
         pName: "Au(T+D)",
         buyLines: [],
         sellLines: [],
-        order: {},
-        hisOrder: []
+        hisOrder: [],
+        matched: []
     },
     ready: function () {
         pageData.intervalId = setInterval(function () {

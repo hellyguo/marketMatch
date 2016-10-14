@@ -8,16 +8,20 @@ import demo.marketmatch.store.MarketMatchWaitingQueuePair;
  * Created by helly on 2016/9/30.
  */
 public class MarketMatchEngine {
-    private MarketMatchStore store = new MarketMatchStore();
-    private MarketMatchViewer viewer;
+    private static final MarketMatchEngine ENGINE = new MarketMatchEngine();
 
-    public MarketMatchEngine(MarketMatchViewer viewer) {
-        this.viewer = viewer;
+    private MarketMatchStore store = new MarketMatchStore();
+
+    public static MarketMatchEngine getInstance() {
+        return ENGINE;
+    }
+
+    private MarketMatchEngine() {
     }
 
     public void receiveAndMatch(MarketMatchOrder order) {
         String pid = order.getPid();
         MarketMatchWaitingQueuePair queuePair = store.getQueue(pid);
-        viewer.refreshView(pid, queuePair.match(order));
+        MarketMatchViewer.getInstance().refreshView(pid, queuePair.match(order));
     }
 }
