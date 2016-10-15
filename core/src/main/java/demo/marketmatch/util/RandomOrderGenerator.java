@@ -24,9 +24,9 @@ public class RandomOrderGenerator {
 
     private static final RandomPriceGenerator GENERATOR = new RandomPriceGenerator(BASIC_LIMIT_PRICE);
 
-    public static MarketMatchOrder createRandomOrder(String data) {
+    public static MarketMatchOrder createRandomOrder(String pid) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(PID.jsonKeyName(), data);
+        jsonObject.put(PID.jsonKeyName(), pid);
         jsonObject.put(CID.jsonKeyName(), USER_PREFIX + RANDOM.nextInt(USER_RANGE));
         jsonObject.put(DIRECT.jsonKeyName(), RANDOM.nextBoolean() ? BUY.name() : SELL.name());
         jsonObject.put(ORDER_TYPE.jsonKeyName(), LIMIT.name());
