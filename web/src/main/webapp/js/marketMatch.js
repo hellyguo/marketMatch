@@ -56,10 +56,10 @@ var pageData = {
         pageData.chart.setOption(option);
     },
     refreshData: function (data) {
-        vm.buyLines = data.buyLines;
-        vm.sellLines = data.sellLines;
-        vm.hisOrder = data.hisOrder;
-        vm.matched = data.matched;
+        vm.buyLines = data.book.buyQueue;
+        vm.sellLines = data.book.sellQueue;
+        vm.hisOrder = data.order;
+        vm.matched = data.trade;
         var newData = {names: [], data: []};
         var labelLeft = {
             normal: {
@@ -67,21 +67,21 @@ var pageData = {
             }
         };
         for (var i = 0; i < 5; i++) {
-            if (i >= data.sellLines.length) {
+            if (i >= data.book.sellQueue.length) {
                 newData.names.unshift(pageData.sellLineNames[5 - i - 1] + "@0");
                 newData.data.unshift({value: 0, label: labelLeft});
             } else {
-                newData.names.push(data.sellLines[i].name + "@" + data.sellLines[i].limitPrice);
-                newData.data.push({value: data.sellLines[i].volume, label: labelLeft});
+                newData.names.push(data.book.sellQueue[i].name + "@" + data.book.sellQueue[i].limitPrice);
+                newData.data.push({value: data.book.sellQueue[i].volume, label: labelLeft});
             }
         }
         for (var j = 0; j < 5; j++) {
-            if (j >= data.buyLines.length) {
+            if (j >= data.book.buyQueue.length) {
                 newData.names.push(pageData.buyLineNames[j] + "@0");
                 newData.data.push({value: 0, label: labelLeft});
             } else {
-                newData.names.push(data.buyLines[j].name + "@" + data.buyLines[j].limitPrice);
-                newData.data.push({value: data.buyLines[j].volume, label: labelLeft});
+                newData.names.push(data.book.buyQueue[j].name + "@" + data.book.buyQueue[j].limitPrice);
+                newData.data.push({value: data.book.buyQueue[j].volume, label: labelLeft});
             }
         }
         var option = {

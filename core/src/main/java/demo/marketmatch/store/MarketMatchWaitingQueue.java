@@ -1,7 +1,5 @@
 package demo.marketmatch.store;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import demo.marketmatch.constants.MarketMatchDirect;
 import demo.marketmatch.domain.MarketMatchOrder;
 import demo.marketmatch.domain.MarketMatchTrade;
@@ -60,7 +58,7 @@ class MarketMatchWaitingQueue {
                 iterator = orderList.iterator();
                 while (iterator.hasNext()) {
                     waitingOrder = iterator.next();
-                    matchedTrade.add(match(order, waitingOrder));
+                    matchedTrade.add(0, match(order, waitingOrder));
                     if (waitingOrder.isFullMatched()) {
                         iterator.remove();
                     }
@@ -107,7 +105,7 @@ class MarketMatchWaitingQueue {
     }
 
     private MarketMatchTrade composeTrade(MarketMatchOrder order, MarketMatchOrder waitingOrder, int matchVolume, int leftVolume, int waitingLeftVolume) {
-        LOGGER.info("{}:{}'s order[{}]@[{}][total {}/before {}/left {}] matches {} lot(s) {}'s order[{}]@[{}][total {}/before {}/left {}]@{} done",
+        LOGGER.debug("{}:{}'s order[{}]@[{}][total {}/before {}/left {}] matches {} lot(s) {}'s order[{}]@[{}][total {}/before {}/left {}]@{} done",
                 order.getPid(), order.getCid(), order.getDirect(), order.getLimitPrice(), order.getVolume(), leftVolume, order.getLeftVolume(), matchVolume,
                 waitingOrder.getCid(), waitingOrder.getDirect(), waitingOrder.getLimitPrice(), waitingOrder.getVolume(), waitingLeftVolume, waitingOrder.getLeftVolume(),
                 waitingOrder.getLimitPrice());
